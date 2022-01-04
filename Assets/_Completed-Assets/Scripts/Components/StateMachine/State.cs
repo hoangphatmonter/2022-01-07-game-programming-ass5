@@ -28,6 +28,10 @@ public abstract class State
     }
 
     public abstract void UpdateState();
+    public virtual void FixedUpdateState()
+    {
+
+    }
 
     public virtual bool ExitState()
     {
@@ -37,4 +41,5 @@ public abstract class State
 
     public abstract void idle();
     public abstract void move();
+    public abstract void shoot();
 }

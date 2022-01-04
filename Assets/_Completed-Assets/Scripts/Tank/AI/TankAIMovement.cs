@@ -15,11 +15,22 @@ public class TankAIMovement : Complete.TankMovement
 
     public void TurnRight()
     {
-        m_MovementInputValue = 0.2f;
+        m_MovementInputValue = 0;
         m_TurnInputValue = 1;
     }
 
     public void TurnLeft()
+    {
+        m_MovementInputValue = 0;
+        m_TurnInputValue = -1;
+    }
+
+    public void TurnMoveRight()
+    {
+        m_MovementInputValue = 0.2f;
+        m_TurnInputValue = 1;
+    }
+    public void TurnMoveLeft()
     {
         m_MovementInputValue = 0.2f;
         m_TurnInputValue = -1;

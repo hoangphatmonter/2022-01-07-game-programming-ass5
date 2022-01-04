@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent(typeof(AIFindingVelocity))]   // use for move state
+[RequireComponent(typeof(AIFindingVelocity), typeof(TankAIShooting), typeof(TankAIMovement))]   // use for move state
 public class StateMachine : MonoBehaviour
 {
     // [SerializeField] State m_StartState;
@@ -33,6 +33,14 @@ public class StateMachine : MonoBehaviour
         }
     }
 
+    public void FixedUpdate()
+    {
+        if (m_currentState != null)
+        {
+            m_currentState.FixedUpdateState();
+        }
+    }
+
     public void idle()
     {
         m_currentState.idle();
@@ -41,5 +49,10 @@ public class StateMachine : MonoBehaviour
     public void move()
     {
         m_currentState.move();
+    }
+
+    public void shoot()
+    {
+        m_currentState.shoot();
     }
 }

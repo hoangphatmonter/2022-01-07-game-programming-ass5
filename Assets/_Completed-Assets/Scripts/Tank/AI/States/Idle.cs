@@ -4,7 +4,6 @@ class Idle : State
 {
     public Idle(StateMachine stateMachine) : base(stateMachine)
     {
-        Debug.Log("hello");
     }
 
     public override void UpdateState()
@@ -27,5 +26,10 @@ class Idle : State
     public override void move()
     {
         m_StateMachine.TransitionToState(new Move(m_StateMachine));
+    }
+
+    public override void shoot()
+    {
+        //
     }
 }

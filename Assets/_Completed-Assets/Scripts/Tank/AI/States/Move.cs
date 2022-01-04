@@ -4,6 +4,7 @@ class Move : State
 {
     protected AIFindingVelocity m_findingVelocity;
     protected TankAIMovement m_tankAIMovement;
+    private GameObject m_opponent;
     public Move(StateMachine stateMachine) : base(stateMachine)
     {
         m_findingVelocity = m_StateMachine.GetComponent<AIFindingVelocity>();
@@ -11,6 +12,9 @@ class Move : State
 
         m_tankAIMovement = m_StateMachine.GetComponent<TankAIMovement>();
         Debug.AssertFormat(m_tankAIMovement, "TankAIMovement is not found");
+
+        m_opponent = GameObject.FindGameObjectWithTag("GameManager").GetComponent<Complete.GameManager>().m_Tanks[0].m_Instance;
+        Debug.AssertFormat(m_opponent, "opponent is not found");
     }
 
     public override bool EnterState()
@@ -20,18 +24,14 @@ class Move : State
         //TODO: make agent find path and go automatically
         Debug.Log("Entering Move state");
 
-        Collider[] hitColliders = Physics.OverlapSphere(m_findingVelocity.transform.position, 100, LayerMask.GetMask("Players"));
-        foreach (var hitCollider in hitColliders)
-        {
-            m_findingVelocity.SetMovePosition(hitCollider.transform.position);
-            return true;
-        }
+        m_findingVelocity.SetMovePosition(m_opponent.transform.position);
 
         return true;
     }
 
     public override void UpdateState()
     {
+
         Vector3 directionToGo = m_findingVelocity.m_currentVelocity;
         directionToGo.y = 0;
 
@@ -43,16 +43,15 @@ class Move : State
         }
 
         // if (angle < 0)
-        // Debug.Log(angle);
         if (directionToGo == Vector3.zero)
             m_tankAIMovement.Stop();
         else if (angle > 5)
         {
-            m_tankAIMovement.TurnLeft();
+            m_tankAIMovement.TurnMoveLeft();
         }
         else if (angle < -5)
         {
-            m_tankAIMovement.TurnRight();
+            m_tankAIMovement.TurnMoveRight();
         }
         else
         {
@@ -60,24 +59,43 @@ class Move : State
         }
 
         //TODO: shoot ?
-        if (m_findingVelocity.reachedEndOfPath)
-            this.EnterState();
+        // if (m_findingVelocity.reachedEndOfPath)
+        //     this.EnterState();
+    }
+
+    public override void FixedUpdateState()
+    {
+        base.FixedUpdateState();
+
+        m_findingVelocity.SetMovePosition(m_opponent.transform.position);
     }
 
     public override bool ExitState()
     {
         base.ExitState();
         Debug.Log("Exiting Move state");
+
+        m_tankAIMovement.Stop();
+
         return true;
     }
 
     public override void idle()
     {
+        ExitState();
+
         m_StateMachine.TransitionToState(new Idle(m_StateMachine));
     }
 
     public override void move()
     {
         //
+    }
+
+    public override void shoot()
+    {
+        ExitState();
+
+        m_StateMachine.TransitionToState(new Shoot(m_StateMachine));
     }
 }
