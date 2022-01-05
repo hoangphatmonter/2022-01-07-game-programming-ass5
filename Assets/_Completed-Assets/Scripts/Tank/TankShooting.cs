@@ -19,6 +19,7 @@ namespace Complete
 
 
         protected string m_FireButton;                // The input axis that is used for launching shells.
+        [SyncVar]
         protected float m_CurrentLaunchForce;         // The force that will be given to the shell when the fire button is released.
         protected float m_ChargeSpeed;                // How fast the launch force increases, based on the max charge time.
         protected bool m_Fired;                       // Whether or not the shell has been launched with this button press.
@@ -86,16 +87,11 @@ namespace Complete
         [Command]
         protected void Fire()
         {
-            RpcOnFire();
+            FireOnClients();
         }
 
         [ClientRpc]
-        void RpcOnFire()
-        {
-            FireOnClient();
-        }
-
-        protected void FireOnClient()
+        protected void FireOnClients()
         {
             // Set the fired flag so only Fire is only called once.
             m_Fired = true;
