@@ -4,7 +4,7 @@ using Mirror;
 
 namespace Complete
 {
-    public class TankShooting : MonoBehaviour
+    public class TankShooting : NetworkBehaviour
     {
         public int m_PlayerNumber = 1;              // Used to identify the different players.
         public Rigidbody m_Shell;                   // Prefab of the shell.
@@ -44,7 +44,7 @@ namespace Complete
 
         private void Update()
         {
-            // if (!isLocalPlayer) return;
+            if (!isLocalPlayer) return;
 
             // The slider should have a default value of the minimum launch force.
             m_AimSlider.value = m_MinLaunchForce;
@@ -83,8 +83,19 @@ namespace Complete
             }
         }
 
-
+        [Command]
         protected void Fire()
+        {
+            RpcOnFire();
+        }
+
+        [ClientRpc]
+        void RpcOnFire()
+        {
+            FireOnClient();
+        }
+
+        protected void FireOnClient()
         {
             // Set the fired flag so only Fire is only called once.
             m_Fired = true;

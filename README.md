@@ -1,3 +1,10 @@
+# Issues
+- Now can move separately
+- Now can shoot
+- Shell not explode right => health not update => wrong game
+- Server/Client Disconnect cause crash game
+- Not handle end game change scene
+
 # Notes
 - [Compare two vectors by angle](https://answers.unity.com/questions/181867/is-there-way-to-find-a-negative-angle.html)
 

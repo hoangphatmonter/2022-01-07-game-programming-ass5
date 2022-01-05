@@ -111,12 +111,11 @@ namespace Complete
 
         private void FixedUpdate()
         {
+            if (!isLocalPlayer) return;
+
             // Adjust the rigidbodies position and orientation in FixedUpdate.
-            // if (isLocalPlayer)
-            // {
             Move();
             Turn();
-            // }
         }
 
         private void Move()
