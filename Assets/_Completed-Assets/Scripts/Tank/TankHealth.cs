@@ -19,6 +19,7 @@ namespace Complete
         [SyncVar(hook = nameof(OnHealthChange))]
         private float m_CurrentHealth;                      // How much health the tank currently has.
         private bool m_Dead;                                // Has the tank been reduced beyond zero health yet?
+        private bool isInvisible = false;
 
 
         private void Awake()
@@ -47,6 +48,8 @@ namespace Complete
         [Command]
         public void TakeDamage(float amount)
         {
+            if (isInvisible) return; // immortal cheat
+
             // Reduce current health by the amount of damage done.
             m_CurrentHealth -= amount;
 
@@ -93,6 +96,30 @@ namespace Complete
 
             // Turn the tank off.
             gameObject.SetActive(false);
+        }
+
+        public void SetInvisible()
+        {
+            isInvisible = !isInvisible;
+
+            if (isInvisible)
+            {
+                MeshRenderer[] renderers = gameObject.GetComponentsInChildren<MeshRenderer>();
+                for (int i = 0; i < renderers.Length; i++)
+                {
+                    // ... set their material color to the color specific to this tank.
+                    renderers[i].material.color = Color.black;
+                }
+            }
+            else
+            {
+                MeshRenderer[] renderers = gameObject.GetComponentsInChildren<MeshRenderer>();
+                for (int i = 0; i < renderers.Length; i++)
+                {
+                    // ... set their material color to the color specific to this tank.
+                    renderers[i].material.color = Color.blue;
+                }
+            }
         }
     }
 }
