@@ -2,10 +2,11 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Mirror;
 
 namespace Complete
 {
-    public class GameManager : MonoBehaviour
+    public class GameManager : NetworkManager
     {
         public int m_NumRoundsToWin = 5;            // The number of rounds a single player has to win to win the game.
         public float m_StartDelay = 3f;             // The delay between the start of RoundStarting and RoundPlaying phases.
@@ -17,15 +18,17 @@ namespace Complete
         public TankManager[] m_Tanks;               // A collection of managers for enabling and disabling different aspects of the tanks.
 
 
-        private int m_RoundNumber;                  // Which round the game is currently on.
-        private WaitForSeconds m_StartWait;         // Used to have a delay whilst the round starts.
-        private WaitForSeconds m_EndWait;           // Used to have a delay whilst the round or game ends.
-        private TankManager m_RoundWinner;          // Reference to the winner of the current round.  Used to make an announcement of who won.
-        private TankManager m_GameWinner;           // Reference to the winner of the game.  Used to make an announcement of who won.
+        protected int m_RoundNumber;                  // Which round the game is currently on.
+        protected WaitForSeconds m_StartWait;         // Used to have a delay whilst the round starts.
+        protected WaitForSeconds m_EndWait;           // Used to have a delay whilst the round or game ends.
+        protected TankManager m_RoundWinner;          // Reference to the winner of the current round.  Used to make an announcement of who won.
+        protected TankManager m_GameWinner;           // Reference to the winner of the game.  Used to make an announcement of who won.
 
 
-        private void Start()
+        public override void Start()
         {
+            base.Start();
+
             // Create the delays so they only have to be made once.
             m_StartWait = new WaitForSeconds(m_StartDelay);
             m_EndWait = new WaitForSeconds(m_EndDelay);
@@ -38,7 +41,7 @@ namespace Complete
         }
 
 
-        private void SpawnAllTanks()
+        protected virtual void SpawnAllTanks()
         {
             //TODO: make multi game mode
             // For all the tanks...
@@ -61,7 +64,7 @@ namespace Complete
         }
 
 
-        private void SetCameraTargets()
+        protected void SetCameraTargets()
         {
             // Create a collection of transforms the same size as the number of tanks.
             Transform[] targets = new Transform[m_Tanks.Length];
@@ -70,16 +73,18 @@ namespace Complete
             for (int i = 0; i < targets.Length; i++)
             {
                 // ... set it to the appropriate tank transform.
+                Debug.Log(i + " " + m_Tanks[i].m_Instance + m_Tanks[i].m_Instance.transform);
                 targets[i] = m_Tanks[i].m_Instance.transform;
             }
 
             // These are the targets the camera should follow.
+            Debug.Log(targets[0] + " " + targets[1]);
             m_CameraControl.m_Targets = targets;
         }
 
 
         // This is called from start and will run each phase of the game one after another.
-        private IEnumerator GameLoop()
+        protected IEnumerator GameLoop()
         {
             // Start off by running the 'RoundStarting' coroutine but don't return until it's finished.
             yield return StartCoroutine(RoundStarting());
@@ -105,7 +110,7 @@ namespace Complete
         }
 
 
-        private IEnumerator RoundStarting()
+        protected IEnumerator RoundStarting()
         {
             // As soon as the round starts reset the tanks and make sure they can't move.
             ResetAllTanks();
@@ -123,7 +128,7 @@ namespace Complete
         }
 
 
-        private IEnumerator RoundPlaying()
+        protected IEnumerator RoundPlaying()
         {
             // As soon as the round begins playing let the players control the tanks.
             EnableTankControl();
@@ -140,7 +145,7 @@ namespace Complete
         }
 
 
-        private IEnumerator RoundEnding()
+        protected IEnumerator RoundEnding()
         {
             // Stop tanks from moving.
             DisableTankControl();
@@ -168,7 +173,7 @@ namespace Complete
 
 
         // This is used to check if there is one or fewer tanks remaining and thus the round should end.
-        private bool OneTankLeft()
+        protected bool OneTankLeft()
         {
             // Start the count of tanks left at zero.
             int numTanksLeft = 0;
@@ -188,7 +193,7 @@ namespace Complete
 
         // This function is to find out if there is a winner of the round.
         // This function is called with the assumption that 1 or fewer tanks are currently active.
-        private TankManager GetRoundWinner()
+        protected TankManager GetRoundWinner()
         {
             // Go through all the tanks...
             for (int i = 0; i < m_Tanks.Length; i++)
@@ -204,7 +209,7 @@ namespace Complete
 
 
         // This function is to find out if there is a winner of the game.
-        private TankManager GetGameWinner()
+        protected TankManager GetGameWinner()
         {
             // Go through all the tanks...
             for (int i = 0; i < m_Tanks.Length; i++)
@@ -220,7 +225,7 @@ namespace Complete
 
 
         // Returns a string message to display at the end of each round.
-        private string EndMessage()
+        protected string EndMessage()
         {
             // By default when a round ends there are no winners so the default end message is a draw.
             string message = "DRAW!";
@@ -247,7 +252,7 @@ namespace Complete
 
 
         // This function is used to turn all the tanks back on and reset their positions and properties.
-        private void ResetAllTanks()
+        protected void ResetAllTanks()
         {
             for (int i = 0; i < m_Tanks.Length; i++)
             {
@@ -256,7 +261,7 @@ namespace Complete
         }
 
 
-        private void EnableTankControl()
+        protected void EnableTankControl()
         {
             for (int i = 0; i < m_Tanks.Length; i++)
             {
@@ -265,7 +270,7 @@ namespace Complete
         }
 
 
-        private void DisableTankControl()
+        protected void DisableTankControl()
         {
             for (int i = 0; i < m_Tanks.Length; i++)
             {

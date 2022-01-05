@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using Mirror;
 
 namespace Complete
 {
@@ -43,6 +44,8 @@ namespace Complete
 
         private void Update()
         {
+            // if (!isLocalPlayer) return;
+
             // The slider should have a default value of the minimum launch force.
             m_AimSlider.value = m_MinLaunchForce;
 
