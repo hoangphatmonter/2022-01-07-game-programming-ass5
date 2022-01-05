@@ -5,7 +5,7 @@
 - Server/Client Disconnect cause crash game
 - Not handle end game change scene
 - Client have the access to update the server if it take damage by command function takeDamage
-- Client have not hold fire to shoot => in result damage themselves
+- ~~Client have not hold fire to shoot => in result damage themselves (cause by client not update its force to the server)~~
 
 # Notes
 - [Compare two vectors by angle](https://answers.unity.com/questions/181867/is-there-way-to-find-a-negative-angle.html)

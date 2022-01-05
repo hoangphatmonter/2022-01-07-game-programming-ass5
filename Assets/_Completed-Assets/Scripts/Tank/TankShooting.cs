@@ -19,7 +19,6 @@ namespace Complete
 
 
         protected string m_FireButton;                // The input axis that is used for launching shells.
-        [SyncVar]
         protected float m_CurrentLaunchForce;         // The force that will be given to the shell when the fire button is released.
         protected float m_ChargeSpeed;                // How fast the launch force increases, based on the max charge time.
         protected bool m_Fired;                       // Whether or not the shell has been launched with this button press.
@@ -54,7 +53,7 @@ namespace Complete
             if (m_CurrentLaunchForce >= m_MaxLaunchForce && !m_Fired)
             {
                 // ... use the max force and launch the shell.
-                m_CurrentLaunchForce = m_MaxLaunchForce;
+                UpdateLaunchForce(m_MaxLaunchForce);
                 Fire();
             }
             // Otherwise, if the fire button has just started being pressed...
@@ -62,7 +61,7 @@ namespace Complete
             {
                 // ... reset the fired flag and reset the launch force.
                 m_Fired = false;
-                m_CurrentLaunchForce = m_MinLaunchForce;
+                UpdateLaunchForce(m_MinLaunchForce);
 
                 // Change the clip to the charging clip and start it playing.
                 m_ShootingAudio.clip = m_ChargingClip;
@@ -72,7 +71,7 @@ namespace Complete
             else if (Input.GetButton(m_FireButton) && !m_Fired)
             {
                 // Increment the launch force and update the slider.
-                m_CurrentLaunchForce += m_ChargeSpeed * Time.deltaTime;
+                UpdateLaunchForce(m_CurrentLaunchForce + m_ChargeSpeed * Time.deltaTime);
 
                 m_AimSlider.value = m_CurrentLaunchForce;
             }
@@ -109,6 +108,19 @@ namespace Complete
 
             // Reset the launch force.  This is a precaution in case of missing button events.
             m_CurrentLaunchForce = m_MinLaunchForce;
+        }
+
+        [Command]
+        protected void UpdateLaunchForce(float value)
+        {
+            // m_CurrentLaunchForce = value; // with async var, server will sync for all clients
+            UpdateLaunchForceOnClients(value);
+        }
+
+        [ClientRpc]
+        protected void UpdateLaunchForceOnClients(float value)
+        {
+            m_CurrentLaunchForce = value;
         }
     }
 }
