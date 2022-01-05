@@ -51,7 +51,7 @@ public class NetworkManagerTank : Complete.GameManager
         if (NetworkClient.isHostClient)
         {
             SendIdentify(m_listIdentifyPlayer);
-            yield return new WaitForSeconds(2f);    //TODO: add synchronous
+            yield return null;    //TODO: add synchronous
             SendStartGame(true);
         }
 
@@ -129,6 +129,8 @@ public class NetworkManagerTank : Complete.GameManager
         m_Tanks[1].m_Instance = NetworkClient.spawned[msg.playerID[1].netId].gameObject;
         m_Tanks[1].m_PlayerNumber = 2;
         m_Tanks[1].Setup();
+
+        //! gameobjects not initialized its children yet until next frame
     }
 
     public void SendStartGame(bool b)
