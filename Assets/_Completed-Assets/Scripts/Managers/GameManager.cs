@@ -15,6 +15,7 @@ namespace Complete
         public GameObject m_TankPrefab;             // Reference to the prefab the players will control.
         public GameObject m_TankAIPrefab;
         public TankManager[] m_Tanks;               // A collection of managers for enabling and disabling different aspects of the tanks.
+        public ItemManager m_ItemManager;
 
 
         private int m_RoundNumber;                  // Which round the game is currently on.
@@ -114,6 +115,8 @@ namespace Complete
             // Snap the camera's zoom and position to something appropriate for the reset tanks.
             m_CameraControl.SetStartPositionAndSize();
 
+            m_ItemManager.StartSpamItem();
+
             // Increment the round number and display text showing the players what round it is.
             m_RoundNumber++;
             m_MessageText.text = "ROUND " + m_RoundNumber;
@@ -144,6 +147,8 @@ namespace Complete
         {
             // Stop tanks from moving.
             DisableTankControl();
+
+            m_ItemManager.StopSpamItem();
 
             // Clear the winner from the previous round.
             m_RoundWinner = null;

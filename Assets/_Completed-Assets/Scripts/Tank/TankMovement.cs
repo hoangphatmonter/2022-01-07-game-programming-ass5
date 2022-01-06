@@ -5,7 +5,8 @@ namespace Complete
     public class TankMovement : MonoBehaviour
     {
         public int m_PlayerNumber = 1;              // Used to identify which tank belongs to which player.  This is set by this tank's manager.
-        public float m_Speed = 12f;                 // How fast the tank moves forward and back.
+        public float m_originalSpeed = 12f;                 // How fast the tank moves forward and back.
+        protected float m_currentSpeed;
         public float m_TurnSpeed = 180f;            // How fast the tank turns in degrees per second.
         public AudioSource m_MovementAudio;         // Reference to the audio source used to play engine sounds. NB: different to the shooting audio source.
         public AudioClip m_EngineIdling;            // Audio to play when the tank isn't moving.
@@ -35,6 +36,8 @@ namespace Complete
             m_MovementInputValue = 0f;
             m_TurnInputValue = 0f;
 
+            m_currentSpeed = m_originalSpeed;
+
             // We grab all the Particle systems child of that Tank to be able to Stop/Play them on Deactivate/Activate
             // It is needed because we move the Tank when spawning it, and if the Particle System is playing while we do that
             // it "think" it move from (0,0,0) to the spawn point, creating a huge trail of smoke
@@ -45,6 +48,10 @@ namespace Complete
             }
         }
 
+        public void OnTakeSpeedBoost(float amount)
+        {
+            m_currentSpeed += amount;
+        }
 
         private void OnDisable()
         {
@@ -118,7 +125,7 @@ namespace Complete
         private void Move()
         {
             // Create a vector in the direction the tank is facing with a magnitude based on the input, speed and the time between frames.
-            Vector3 movement = transform.forward * m_MovementInputValue * m_Speed * Time.deltaTime;
+            Vector3 movement = transform.forward * m_MovementInputValue * m_currentSpeed * Time.deltaTime;
 
             // Apply this movement to the rigidbody's position.
             m_Rigidbody.MovePosition(m_Rigidbody.position + movement);

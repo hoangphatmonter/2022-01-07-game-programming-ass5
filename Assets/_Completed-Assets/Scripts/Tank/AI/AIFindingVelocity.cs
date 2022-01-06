@@ -85,6 +85,11 @@ public class AIFindingVelocity : MonoBehaviour
         seeker.StartPath(transform.position, movePosition, OnPathComplete);
     }
 
+    public Vector3 GetDestination()
+    {
+        return movePosition;
+    }
+
     /// <summary> callback when creating path complete </summary>
     void OnPathComplete(Path p)
     {

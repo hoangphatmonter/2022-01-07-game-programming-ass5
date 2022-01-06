@@ -67,7 +67,10 @@ class Move : State
     {
         base.FixedUpdateState();
 
-        m_findingVelocity.SetMovePosition(m_opponent.transform.position);
+        if (Vector3.Distance(m_opponent.transform.position, m_findingVelocity.GetDestination()) > 2f)
+        {
+            m_findingVelocity.SetMovePosition(m_opponent.transform.position);
+        }
     }
 
     public override bool ExitState()

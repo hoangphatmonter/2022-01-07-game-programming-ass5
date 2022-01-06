@@ -60,7 +60,6 @@ public class Shoot : State
             m_tankAIMovement.TurnRight();
         }
 
-        Debug.Log(m_tankAIShooting.m_shootState);
         if (m_tankAIShooting.m_shootState == TankAIShooting.ShootState.IDLE)
         {
             m_tankAIShooting.m_shootState = TankAIShooting.ShootState.HOLD;

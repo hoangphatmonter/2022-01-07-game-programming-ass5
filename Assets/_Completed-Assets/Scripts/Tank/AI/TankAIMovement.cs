@@ -27,12 +27,12 @@ public class TankAIMovement : Complete.TankMovement
 
     public void TurnMoveRight()
     {
-        m_MovementInputValue = 0.2f;
+        m_MovementInputValue = 0.2f * m_originalSpeed / m_currentSpeed;
         m_TurnInputValue = 1;
     }
     public void TurnMoveLeft()
     {
-        m_MovementInputValue = 0.2f;
+        m_MovementInputValue = 0.2f * m_originalSpeed / m_currentSpeed;
         m_TurnInputValue = -1;
     }
 
