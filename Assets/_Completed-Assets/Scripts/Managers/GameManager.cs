@@ -71,6 +71,14 @@ namespace Complete
             m_TurretAI = turretRigidbody.GetComponent<TurretAI>();
         }
 
+        private void Update()
+        {
+            if (Input.GetAxis("Exit") > 0)
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+            }
+        }
+
 
         private void SetCameraTargets()
         {
