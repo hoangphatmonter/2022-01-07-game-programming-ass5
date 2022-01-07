@@ -10,7 +10,7 @@ public class ItemManager : MonoBehaviour
 
     protected List<SpeedBoost> m_SpeedBoost;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         m_SpeedBoost = new List<SpeedBoost>();
     }
