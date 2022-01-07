@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TurretAI : MonoBehaviour
 {
-    public float m_shootingRange = 8f;
+    public float m_shootingRange;
     // public Material m_material;
     // public TankAIMovement m_tankAIMovement;
     // public AIFindingVelocity m_findingVelocity;
@@ -29,7 +29,7 @@ public class TurretAI : MonoBehaviour
 
         SequenceNode shoot = new SequenceNode(new List<Node> { rangeNode, shootNode });
 
-        m_behaviorTree = new SequenceNode(new List<Node> { shoot, idleNode });
+        m_behaviorTree = new SelectorNode(new List<Node> { shoot, idleNode });
     }
 
     // Update is called once per frame

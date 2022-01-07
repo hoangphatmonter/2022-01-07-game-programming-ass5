@@ -14,8 +14,10 @@ namespace Complete
         public Text m_MessageText;                  // Reference to the overlay Text to display winning text, etc.
         public GameObject m_TankPrefab;             // Reference to the prefab the players will control.
         public GameObject m_TankAIPrefab;
+        public GameObject m_TruckPrefab;
+        public GameObject m_TurretPrefab;
         public TankManager[] m_Tanks;               // A collection of managers for enabling and disabling different aspects of the tanks.
-        public ItemManager m_ItemManager;
+        // public ItemManager m_ItemManager;
 
 
         private int m_RoundNumber;                  // Which round the game is currently on.
@@ -23,6 +25,8 @@ namespace Complete
         private WaitForSeconds m_EndWait;           // Used to have a delay whilst the round or game ends.
         private TankManager m_RoundWinner;          // Reference to the winner of the current round.  Used to make an announcement of who won.
         private TankManager m_GameWinner;           // Reference to the winner of the game.  Used to make an announcement of who won.
+        private TruckAI m_TruckAI;
+        private TurretAI m_TurretAI;
 
 
         private void Start()
@@ -59,6 +63,12 @@ namespace Complete
                 m_Tanks[i].m_PlayerNumber = i + 1;
                 m_Tanks[i].Setup();
             }
+
+            Rigidbody truckRigidbody = Instantiate(m_TruckPrefab, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<Rigidbody>();
+            m_TruckAI = truckRigidbody.GetComponent<TruckAI>();
+
+            GameObject turretRigidbody = Instantiate(m_TurretPrefab, new Vector3(-18, 0, -0.5f), Quaternion.identity);
+            m_TurretAI = turretRigidbody.GetComponent<TurretAI>();
         }
 
 
@@ -115,7 +125,7 @@ namespace Complete
             // Snap the camera's zoom and position to something appropriate for the reset tanks.
             m_CameraControl.SetStartPositionAndSize();
 
-            m_ItemManager.StartSpamItem();
+            // m_ItemManager.StartSpamItem();
 
             // Increment the round number and display text showing the players what round it is.
             m_RoundNumber++;
@@ -148,7 +158,7 @@ namespace Complete
             // Stop tanks from moving.
             DisableTankControl();
 
-            m_ItemManager.StopSpamItem();
+            // m_ItemManager.StopSpamItem();
 
             // Clear the winner from the previous round.
             m_RoundWinner = null;
@@ -258,6 +268,9 @@ namespace Complete
             {
                 m_Tanks[i].Reset();
             }
+
+            m_TruckAI.Reset();
+            m_TruckAI.transform.position = new Vector3(0, 0, 0);
         }
 
 
@@ -267,6 +280,9 @@ namespace Complete
             {
                 m_Tanks[i].EnableControl();
             }
+
+            m_TruckAI.gameObject.SetActive(true);
+            m_TurretAI.gameObject.SetActive(true);
         }
 
 
@@ -276,6 +292,9 @@ namespace Complete
             {
                 m_Tanks[i].DisableControl();
             }
+
+            m_TruckAI.gameObject.SetActive(false);
+            m_TurretAI.gameObject.SetActive(false);
         }
     }
 }

@@ -7,9 +7,9 @@ public class TurretShooting : MonoBehaviour
     public Rigidbody m_Shell;
     public AudioSource m_ShootingAudio;
     public Transform m_FireTransform;
-    public float m_CurrentLaunchForce = 5f;
+    public float m_CurrentLaunchForce;
     public TurretAI m_TurretAI;
-    public float m_coolDown = 0.5f;
+    public float m_coolDown;
     public float m_nextShot;
     private void Start()
     {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
 
-[RequireComponent(typeof(TankAIMovement))]
 public class AIFindingVelocity : MonoBehaviour
 {
     // public TankAIMovement m_TankAIMovement;
@@ -15,7 +14,7 @@ public class AIFindingVelocity : MonoBehaviour
 
     // AI stuffs
     private float nextWaypointDistance;
-    Path path;
+    public Path path { get; private set; }
     int currentWaypoint;
     public bool reachedEndOfPath { get; private set; }
 
